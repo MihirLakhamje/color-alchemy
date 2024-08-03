@@ -39,13 +39,13 @@ export default async function RootLayout({
                     </NavBarLink>
                   </li>
                   <li>
-                    <NavBarLink href="/create" titleName={"Create Palette"}>
-                      Create Palette
+                    <NavBarLink href="/random" titleName={"Random"}>
+                      Random
                     </NavBarLink>
                   </li>
                   <li>
-                    <NavBarLink href="/mypalettes" titleName={"My Palettes"}>
-                      My Palettes
+                    <NavBarLink href="/create" titleName={"Create Palette"}>
+                      Create Palette
                     </NavBarLink>
                   </li>
                 </>
@@ -87,11 +87,8 @@ export default async function RootLayout({
                   <li className="sm:hidden block">
                     <NavBarLink href="/create">Create Palette</NavBarLink>
                   </li>
-                  <li className="sm:hidden block">
+                  <li className="">
                     <NavBarLink href="/mypalettes">My Palettes</NavBarLink>
-                  </li>
-                  <li>
-                    <NavBarLink href="/account">Account</NavBarLink>
                   </li>
                   <div className="divider m-0"></div>
                   <li>
