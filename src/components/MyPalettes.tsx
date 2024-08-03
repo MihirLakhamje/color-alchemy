@@ -88,6 +88,15 @@ export default function MyPalettes() {
     if (page > 1) setPage((prevPage) => prevPage - 1);
   };
 
+  async function handleDelete(id: string) {
+    try {
+      await axios.delete(`/api/palettes/delete`, {data: {id}});
+      fetchPalettes(page);
+    } catch (error) {
+      console.log("Error while deleting palette", error);
+    }
+  }
+
   return (
     <>
       <div className={error ? "" : "flex flex-col h-screen justify-between gap-5"}>
@@ -162,6 +171,7 @@ export default function MyPalettes() {
                       </li>
                     </ul>
                   </div>
+                  <button className="btn btn-xs btn-error btn-outline" onClick={()=>handleDelete(palette._id)}>delete</button>
                 </div>
               </div>
             </div>
