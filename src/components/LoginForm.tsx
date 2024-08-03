@@ -101,9 +101,6 @@ export default function LoginForm() {
           <a href="/signup" className="label-text-alt link link-hover">
             Create an account?
           </a>
-          <a href="/signup" className="label-text-alt link link-hover">
-            Forgot password?
-          </a>
         </label>
         <label className="form-control w-full max-w-sm mt-2">
         <ReCAPTCHA 
