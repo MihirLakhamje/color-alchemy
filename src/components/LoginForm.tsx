@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { isAxiosError } from "axios";
 import Toast from "./Toast";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface IFormInput {
   email: string;
@@ -18,6 +19,7 @@ const loginSchema = yup.object({
   password: yup.string().required("Password is required"),
 });
 export default function LoginForm() {
+  const [capcha, setCapcha] = useState<string | null>();
   const {
     register,
     handleSubmit,
@@ -31,6 +33,12 @@ export default function LoginForm() {
   async function loginSubmit(input: IFormInput) {
     setLoading(true);
     try {
+      if(!capcha) {
+        setLoading(false);
+        setToast("Please verify you are not a robot");
+        setTimeout(() => setToast(null), 3000);
+        return;
+      }
       await axios.post("/api/users/login", input);
       setLoading(false);
       replace("/");
@@ -98,7 +106,12 @@ export default function LoginForm() {
           </a>
         </label>
         <label className="form-control w-full max-w-sm mt-2">
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <ReCAPTCHA 
+          sitekey={process.env.NEXT_PUBLIC_RECAPCHA_SITE_KEY!} 
+          className="mx-auto" 
+          onChange={setCapcha}
+        />
+        <button type="submit" className="btn btn-primary mt-2" disabled={loading}>
             Continue
             {loading && <span className="loading loading-spinner"></span>}
           </button>

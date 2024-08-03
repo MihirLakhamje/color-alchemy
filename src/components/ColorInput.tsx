@@ -4,6 +4,7 @@ import React from "react";
 import { useState } from "react";
 import Toast from "./Toast";
 import { useRouter } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface ColorInputProps {
   color: string;
@@ -38,6 +39,7 @@ export default function ColorInput() {
   const [secondaryColor, setSecondaryColor] = useState<string>("#bbbbbb");
   const [accentColor, setAccentColor] = useState<string>("#cccccc");
   const [neutralColor, setNeutralColor] = useState<string>("#dddddd");
+  const [capcha, setCapcha] = useState<string | null>();
 
   const [toast, setToast] = useState<string | null>(null);
   const { replace, refresh } = useRouter();
@@ -51,6 +53,12 @@ export default function ColorInput() {
     };
     setLoading(true);
     try {
+      if(!capcha) {
+        setLoading(false);
+        setToast("Please verify you are not a robot");
+        setTimeout(() => setToast(null), 3000);
+        return;
+      }
       await axios.post("/api/palettes/create", data);
       setLoading(false);
       setToast("Palette created successfully");
@@ -97,6 +105,11 @@ export default function ColorInput() {
             handleColor={(e) => setNeutralColor(e.target.value)}
           />
         </div>
+        <ReCAPTCHA
+          sitekey={process.env.NEXT_PUBLIC_RECAPCHA_SITE_KEY!} 
+          className="mx-auto" 
+          onChange={setCapcha}
+        />
         <label className="form-control w-full max-w-sm mt-2">
           <button
             type="submit"

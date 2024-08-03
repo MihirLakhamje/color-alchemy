@@ -7,6 +7,7 @@ import { useState } from "react";
 import axios, { Axios, AxiosError, isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import Toast from "./Toast";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface IFormInput {
   email: string;
@@ -17,6 +18,7 @@ const signupSchema = yup.object({
   password: yup.string().min(6).required("Password is required"),
 });
 export default function SignupForm() {
+  const [capcha, setCapcha] = useState<string | null>();
   const {
     register,
     handleSubmit,
@@ -30,6 +32,12 @@ export default function SignupForm() {
 
   async function signupSubmit(input: IFormInput) {
     try {
+      if(!capcha) {
+        setLoading(false);
+        setToast("Please verify you are not a robot");
+        setTimeout(() => setToast(null), 3000);
+        return;
+      }
       setLoading(true);
       await axios.post("/api/users/signup", input);
       setLoading(false);
@@ -101,6 +109,11 @@ export default function SignupForm() {
             Already have an account?
           </a>
         </label>
+        <ReCAPTCHA 
+          sitekey={process.env.NEXT_PUBLIC_RECAPCHA_SITE_KEY!} 
+          className="mx-auto" 
+          onChange={setCapcha}
+        />
         <label className="form-control w-full max-w-sm mt-2">
           <button type="submit" className="btn btn-primary" disabled={loading}>
             Continue
