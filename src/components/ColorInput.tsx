@@ -1,15 +1,16 @@
 "use client";
 import axios from "axios";
-import React, { useRef } from "react";
+import React from "react";
 import { useState } from "react";
 import Toast from "./Toast";
+import { useRouter } from "next/navigation";
 
 interface ColorInputProps {
   color: string;
   handleColor: (color: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function HexInput({color, handleColor}: ColorInputProps) {
+function HexInput({ color, handleColor }: ColorInputProps) {
   return (
     <>
       <div className="flex gap-4 w-full">
@@ -39,6 +40,7 @@ export default function ColorInput() {
   const [neutralColor, setNeutralColor] = useState<string>("#dddddd");
 
   const [toast, setToast] = useState<string | null>(null);
+  const { replace, refresh } = useRouter();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = {
@@ -58,6 +60,8 @@ export default function ColorInput() {
       setAccentColor("#cccccc");
       setNeutralColor("#dddddd");
       setIsChanged(false);
+      replace("/mypalettes");
+      refresh();
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -80,9 +84,18 @@ export default function ColorInput() {
       >
         <div className="flex flex-col items-center gap-4 w-full">
           <HexInput color={primaryColor} handleColor={handleChange} />
-          <HexInput color={secondaryColor} handleColor={(e) => setSecondaryColor(e.target.value)} />
-          <HexInput color={accentColor} handleColor={(e) => setAccentColor(e.target.value)} />
-          <HexInput color={neutralColor} handleColor={(e) => setNeutralColor(e.target.value)} />
+          <HexInput
+            color={secondaryColor}
+            handleColor={(e) => setSecondaryColor(e.target.value)}
+          />
+          <HexInput
+            color={accentColor}
+            handleColor={(e) => setAccentColor(e.target.value)}
+          />
+          <HexInput
+            color={neutralColor}
+            handleColor={(e) => setNeutralColor(e.target.value)}
+          />
         </div>
         <label className="form-control w-full max-w-sm mt-2">
           <button

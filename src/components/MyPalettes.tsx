@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 
 interface ColorItemProps {
@@ -49,22 +49,27 @@ function ColorItem({ color, className }: ColorItemProps) {
   );
 }
 
-export default function AllPalettes() {
+export default function MyPalettes() {
   const [isCopyCSSVar, setIsCopyCSSVar] = useState(false);
   const [isCopyJson, setIsCopyJson] = useState(false);
   const [palettes, setPalettes] = useState<PaletteProps[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [error, setError] = useState("");
   const pageSize = 20;
 
   async function fetchPalettes(pageNumber: number) {
     try {
       const { data } = await axios.get(
-        `/api/palettes/all?page=${pageNumber}&pageSize=${pageSize}`
+        `/api/palettes/mypalette?page=${pageNumber}&pageSize=${pageSize}`
       );
       setPalettes(data?.palettesData);
       setTotalCount(data?.total);
+      setError("");
     } catch (error) {
+      if(isAxiosError(error)){
+        setError(error.response?.data.message);
+      }
       console.log("Error while fetching palettes", error);
     }
   }
@@ -85,7 +90,7 @@ export default function AllPalettes() {
 
   return (
     <>
-      <div className="flex flex-col h-screen justify-between gap-5">
+      <div className={error ? "" : "flex flex-col h-screen justify-between gap-5"}>
         <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           {palettes.map((palette) => (
             <div
@@ -162,22 +167,32 @@ export default function AllPalettes() {
             </div>
           ))}
         </div>
-        <div className="join grid grid-cols-2 max-w-xs mt-4 self-center">
+        {error ? (
+          <div>
+            <h2 className="text-xl font-bold">{error}</h2>
+          </div>
+            
+        ):(
+          <>
+          
+          <div className="join grid grid-cols-2 max-w-xs mt-4 self-center">
           <button
             onClick={handlePreviousPage}
             disabled={page === 1}
             className="join-item btn btn-outline btn-primary"
-          >
+            >
             Previous page
           </button>
           <button
             onClick={handleNextPage}
             disabled={page === totalPages}
             className="join-item btn btn-outline btn-primary"
-          >
+            >
             Next
           </button>
         </div>
+          </>
+        )}
       </div>
     </>
   );
