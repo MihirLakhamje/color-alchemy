@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { FaUser } from "react-icons/fa6";
+import { FaEllipsis, FaUser } from "react-icons/fa6";
 import NavBarLink from "@/components/NavBarLink";
 import { getSession } from "@/libs/auth";
 import LogoutBtn from "@/components/LogoutBtn";
@@ -102,9 +102,36 @@ export default async function RootLayout({
                 </ul>
               </div>
             ) : (
-              <a href="/login" className="btn btn-sm btn-accent sm:hidden flex">
-                Login
-              </a>
+              <>
+                <div className="dropdown dropdown-end ">
+                <div
+                  title="Account"
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-primary btn-circle avatar btn-sm ms-2"
+                >
+                  <FaEllipsis className="w-3 h-3" />
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+                >
+                  <li className="sm:hidden block">
+                    <NavBarLink href="/">Home</NavBarLink>
+                  </li>
+                  <li className="sm:hidden block">
+                    <a href="/create">Create Palette</a>
+                  </li>
+                  <li className="">
+                    <NavBarLink href="/random">Random</NavBarLink>
+                  </li>
+                  <div className="divider m-0"></div>
+                  <li>
+                    <NavBarLink href="/login">Login</NavBarLink>
+                  </li>
+                </ul>
+              </div>
+              </>
             )}
           </nav>
         </header>
