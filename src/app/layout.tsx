@@ -57,6 +57,11 @@ export default async function RootLayout({
                     </NavBarLink>
                   </li>
                   <li>
+                    <NavBarLink href="/random" titleName={"Random"}>
+                      Random
+                    </NavBarLink>
+                  </li>
+                  <li>
                     <a href="/login">Create Palette</a>
                   </li>
                   <li>
