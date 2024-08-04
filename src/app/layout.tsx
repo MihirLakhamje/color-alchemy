@@ -103,7 +103,7 @@ export default async function RootLayout({
               </div>
             ) : (
               <>
-                <div className="dropdown dropdown-end ">
+                <div className="dropdown dropdown-end  sm:hidden inline-block">
                 <div
                   title="Account"
                   tabIndex={0}
